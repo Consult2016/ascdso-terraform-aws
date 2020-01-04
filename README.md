@@ -1,36 +1,29 @@
-# Terraform: Up & Running Code
+# Aries Systems Consulting - ASCDSO - ascdso-terraform-aws
 
-This repo contains the code samples for the book *[Terraform: Up and Running](http://www.terraformupandrunning.com)*,
-2nd edition, by [Yevgeniy Brikman](http://www.ybrikman.com).
-
-
+This repo contains the code *[ascdso-terraform-aws](https://github.com/Consult2016/ascdso-terraform-aws)*,
+Master, by [Charles O. Mitchell](https://ariesconsulting.biz).
 
 
 ## Quick start
 
 All the code is in the [code](/code) folder. It is organized by language (terraform, bash, ruby, etc) and within each
 language, by chapter. Since this code comes from a book about Terraform, the vast majority of the code consists of
-Terraform examples in the [code/terraform folder](/code/terraform). 
+Terraform examples in the [code/terraform folder](/code/terraform).
 
-For instructions on running the code, please consult the README in each folder, and, of course, the 
-*[Terraform: Up and Running](http://www.terraformupandrunning.com)* book. 
-
+For instructions on running the code, please consult the README in each folder, and, of course, the
+*[ascdso-terraform-aws](http://www.terraformupandrunning.com)* book.
 
 
 ## More examples
 
-The example code in *Terraform: Up and Running* are mostly for Amazon Web Services (AWS). There is a project underway
+The example code in *ascdso-terraform-aws* are mostly for Amazon Web Services (AWS). There is a project underway
 to translate these examples to their equivalents on other cloud providers, such as Google Cloud and Azure, here:
-https://github.com/mjuenema/Terraform-Up-and-Running-Code-Samples-Translated/. 
-
+https://github.com/mjuenema/Terraform-Up-and-Running-Code-Samples-Translated/.
 
 
 ## Looking for the 1st edition?
 
-All the code examples in the `master` branch are for the 2nd edition of *Terraform: Up & Running*. If you're looking
-for the code examples from the 1st edition, please head over to the 
-[1st-edition branch](https://github.com/brikis98/terraform-up-and-running-code/tree/1st-edition).
-
+All the code examples in the `master` branch are for the 2nd edition of *Terraform: Up & Running*.
 
 
 ## License
