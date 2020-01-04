@@ -1,3 +1,10 @@
+### variables definition
+variable "aws_access_key" {}
+variable "aws_secret_key" {}
+variable "private_key_path" {}
+variable "key_name" {default = "ascdso2020-key-pair-uswest2"}
+
+
 variable "server_port" {
   description = "The port the server will use for HTTP requests"
   type        = number
@@ -53,5 +60,5 @@ variable "object_example" {
 variable "security_group_name" {
   description = "The name of the security group"
   type        = string
-  default     = "terraform-instance"
+  default     = "terraform-webserver-instance"
 }
