@@ -22,14 +22,14 @@ variable "alb_security_group_name" {
   default     = "ascdso-alb-master"
 }
 
-variable "data.terraform_remote_state.db.outputs.address" {
+variable "ascdso-db_address" {
   description = "The name of rds database for ascdso-db"
   type        = string
   default     = "ascdso-db-aws20200305152947298000000001.c4znkjvcnazv.us-west-2.rds.amazonaws.com"
 }
 
-variable "data.terraform_remote_state.db.outputs.port" {
+variable "ascdso-db_port" {
   description = "The number of rds database port for ascdso-db"
   type        = number
-  default     = "3306"
+  default     = 3306
 }

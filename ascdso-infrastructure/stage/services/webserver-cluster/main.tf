@@ -13,18 +13,7 @@ resource "aws_launch_configuration" "ascdso" {
   image_id        = "ami-0edf3b95e26a682df"
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.instance.id]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              echo "Hello, ASCDSO" > index.html
-              echo
-              "${data.terraform_remote_state.db.outputs.address}"
-              >> index.html
-              echo
-              "${data.terraform_remote_state.db.outputs.port}"
-              >> index.html
-              nohup busybox httpd -f -p ${var.server_port} &
-              EOF
+  user_data       = data.template_file.user_data.rendered
 
   # Required when using a launch configuration with an auto scaling group.
   # https://www.terraform.io/docs/providers/aws/r/launch_configuration.html
@@ -165,12 +154,12 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "ascdso-db" {
-  backend = "s3"
+  data "template_file" "user_data" {
+    template = file("user-data.sh")
 
-  config = {
-    bucket = "ascdso-state"
-    key = "stage/data-storage/mysql/terraform.tfstate"
-    region = "us-west-2"
+    vars = {
+    server_port = var.server_port
+    db_address = var.ascdso-db_address
+    db_port = var.ascdso-db_port
+       }
     }
-  }
