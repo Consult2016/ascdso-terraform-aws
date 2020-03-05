@@ -9,7 +9,7 @@ terraform {
     # manually, uncomment and fill in the config below.
 
     bucket         = "ascdso-state"
-    key            = "global/s3/terraform.tfstate"
+    key            = "stage/data-storage/terraform.tfstate"
     region         = "us-west-2"
     dynamodb_table = "ascdso-locks"
     encrypt        = true

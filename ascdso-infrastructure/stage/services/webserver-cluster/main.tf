@@ -3,22 +3,26 @@ terraform {
 }
 
 provider "aws" {
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
   region = "us-west-2"
 
   # Allow any 2.x version of the AWS provider
   version = "~> 2.0"
 }
 
-resource "aws_launch_configuration" "ubuntu1804" {
-  image_id        = "ami-06d51e91cea0dac8d"
+resource "aws_launch_configuration" "ascdso" {
+  image_id        = "ami-0edf3b95e26a682df"
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.instance.id]
 
   user_data = <<-EOF
               #!/bin/bash
               echo "Hello, ASCDSO" > index.html
+              echo
+              "${data.terraform_remote_state.db.outputs.address}"
+              >> index.html
+              echo
+              "${data.terraform_remote_state.db.outputs.port}"
+              >> index.html
               nohup busybox httpd -f -p ${var.server_port} &
               EOF
 
@@ -29,8 +33,8 @@ resource "aws_launch_configuration" "ubuntu1804" {
   }
 }
 
-resource "aws_autoscaling_group" "ubuntu1804" {
-  launch_configuration = aws_launch_configuration.ubuntu1804.name
+resource "aws_autoscaling_group" "ascdso-autoscale-group" {
+  launch_configuration = aws_launch_configuration.ascdso.name
   vpc_zone_identifier  = data.aws_subnet_ids.default.ids
 
   target_group_arns = [aws_lb_target_group.asg.arn]
@@ -41,7 +45,7 @@ resource "aws_autoscaling_group" "ubuntu1804" {
 
   tag {
     key                 = "Name"
-    value               = "terraform-asg-ubuntu1804"
+    value               = "ascdso-asg-master"
     propagate_at_launch = true
   }
 }
@@ -65,7 +69,7 @@ data "aws_subnet_ids" "default" {
   vpc_id = data.aws_vpc.default.id
 }
 
-resource "aws_lb" "ubuntu1804" {
+resource "aws_lb" "ascdso" {
 
   name               = var.alb_name
 
@@ -75,7 +79,7 @@ resource "aws_lb" "ubuntu1804" {
 }
 
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.ubuntu1804.arn
+  load_balancer_arn = aws_lb.ascdso.arn
   port              = 80
   protocol          = "HTTP"
 
@@ -115,9 +119,10 @@ resource "aws_lb_listener_rule" "asg" {
   priority     = 100
 
   condition {
-    field  = "path-pattern"
+    path_pattern {
     values = ["*"]
   }
+}
 
   action {
     type             = "forward"
@@ -145,3 +150,27 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+terraform {
+  backend "s3" {
+
+    # This backend configuration is filled in automatically at test time by Terratest. If you wish to run this example
+    # manually, uncomment and fill in the config below.
+
+    bucket         = "ascdso-state"
+    key            = "stage/services/webserver-cluster/terraform.tfstate"
+    region         = "us-west-2"
+    dynamodb_table = "ascdso-locks"
+    encrypt        = true
+  }
+}
+
+data "terraform_remote_state" "ascdso-db" {
+  backend = "s3"
+
+  config = {
+    bucket = "ascdso-state"
+    key = "stage/data-storage/mysql/terraform.tfstate"
+    region = "us-west-2"
+    }
+  }
