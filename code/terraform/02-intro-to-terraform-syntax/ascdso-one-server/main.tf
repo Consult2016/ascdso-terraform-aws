@@ -12,15 +12,8 @@ provider "aws" {
 resource "aws_instance" "ascdso-example" {
   ami           = "ami-0edf3b95e26a682df"
   instance_type = "t2.micro"
-  vpc_security_group_ids = ["default"]
-
-  user_data = <<-EOF
-            #!/bin/bash
-            echo "Hello, ASCDSO!!!" > index.html
-            nohup busybox httpd -f -p 8080 &
-            EOF
 
   tags = {
-     Name = "ascdso-terraform-master"
+    Name = "ascdso-ec2-example"
   }
 }
