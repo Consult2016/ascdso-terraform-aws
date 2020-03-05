@@ -6,6 +6,7 @@
 variable "db_password" {
   description = "The password for the database"
   type        = string
+  default     = "ascdso2020@!"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -16,6 +17,5 @@ variable "db_password" {
 variable "db_name" {
   description = "The name to use for the database"
   type        = string
-  default     = "example_database_stage"
+  default     = "ascdso_database_stage"
 }
-

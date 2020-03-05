@@ -3,13 +3,13 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = "us-west-2"
 
   # Allow any 2.x version of the AWS provider
   version = "~> 2.0"
 }
 
-resource "aws_s3_bucket" "terraform_state" {
+resource "aws_s3_bucket" "ascdso_state" {
 
   bucket = var.bucket_name
 
@@ -33,7 +33,7 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 
-resource "aws_dynamodb_table" "terraform_locks" {
+resource "aws_dynamodb_table" "ascdso_locks" {
   name         = var.table_name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
@@ -41,5 +41,19 @@ resource "aws_dynamodb_table" "terraform_locks" {
   attribute {
     name = "LockID"
     type = "S"
+  }
+}
+
+terraform {
+  backend "s3" {
+
+    # This backend configuration is filled in automatically at test time by Terratest. If you wish to run this example
+    # manually, uncomment and fill in the config below.
+
+    bucket         = "ascdso-state"
+    key            = "global/s3/terraform.tfstate"
+    region         = "us-west-2"
+    dynamodb_table = "ascdso-locks"
+    encrypt        = true
   }
 }
